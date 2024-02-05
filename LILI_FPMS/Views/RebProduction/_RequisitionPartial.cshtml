@@ -1,0 +1,445 @@
+﻿@model List<LILI_FPMS.Models.GetSearchProcessOrderList>
+<!-- Modal -->
+<div class="modal fade" id="add-Requisition" tabindex="-1" role="dialog" aria-labelledby="addContactLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header"  style="background-color:#0c8599; color:white;">
+
+                <h3 class="modal-title" id="addContactLabel">
+                    <b>Select Process Order</b>
+                    </h3>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Experties">
+                    <input name="IsValid" type="hidden" value="@ViewData.ModelState.IsValid.ToString()" />
+
+                    <div class="form-group">
+            @*             <label class="col-sm-2 control-label"
+                               for="inputEmail3"></label> *@
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="searchKey" name="searchKey" placeholder="Search"/>
+                        </div>
+                  
+                        <div class="col-sm-2" style="padding-top:1px;">
+                            <button id="btnSearchRequisitionByKey" type="button" class="btn btn-mini btn-primary">Search</button>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <table id="htRequisitionDetail" class="table table-bordered table-striped mt-5">
+                            <thead>
+                                <tr>
+                                    <th style="width:2%"></th>
+                                    <th style="width:10%;text-align:center;">Process Order No.</th>
+                                    <th style="width:15%;text-align:center;">Process Order Date</th>
+                                    <th style="width:5%;text-align:center;">Product Code</th>
+                                    <th style="width:20%;text-align:center;">Product Name</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbProductDtl" class="js_tbl_body">
+                                @{
+                                    int i = 0; @*To make unique Id*@
+                                    foreach (var item in Model)
+                                    {
+                                                                                                        @*@Html.HiddenIndexerInputForModel()*@
+                                        var index = i;
+                                                                                                <tr>
+                                                                                                    <td style="display:none"><input name='tblProductionProcessDetail.Index' type="hidden" value=@index /></td>
+                                                                                                    <td >@Html.RadioButtonFor(modelItem => item.ProcessOrderNo, item.ProcessOrderNo)</td>
+                                                                                                    <td>@Html.DisplayFor(modelItem => item.ProcessOrderNo, new { @id = "ProcessOrderNo_" + i })</td>
+                                                                                                    <td>@Html.DisplayFor(modelItem => item.ProcessOrderDate, new { @id = "ProcessOrderDate_" + i })</td>
+                                                                                                    <td style="text-align:left;">@Html.DisplayFor(modelItem => item.ProductCode, new { @id = "ProductCode_" + i })</td>
+                                                                                                    <td>@Html.DisplayFor(modelItem => item.ProductName, new { @id = "ProductName_" + i })</td>
+                                                                                                </tr>
+                                        i++;
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="background-color:#0c8599; ">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="SetRequisition" class="btn btn-primary" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () { 
+        $('.select2').select2();
+        //$('#SetRequisition').on('click', function () {
+        //    var requisitionNo = $("input:checked").val();
+        //    if (requisitionNo != '') {
+        //        $.ajax({
+        //            type: "POST",
+        //            url: "/Production/SetRequisition",
+        //            data: { requisitionNo: requisitionNo },
+        //            success: function (msg) {
+        //                $('#RequisitionNo').val('');
+        //                $('#BatchNo').val('');
+        //                $('#ProductName').val('');
+        //                $('#StandardOutput').val('');
+        //                $('#BatchSize').val('');
+        //                $('#ProductionQty').val('');
+        //                for (var i = 0; i < msg.length; i++) {
+        //                    $('#RequisitionNo').val(msg[i].RequisitionNo);
+        //                    $('#BatchNo').val(msg[i].BatchNo);
+        //                    $('#ProductName').val(msg[i].ProductName);
+        //                    $('#StandardOutput').val(msg[i].StandardOutput);
+        //                    $('#BatchSize').val(msg[i].BatchSize);
+        //                    $('#ProductionQty').val(msg[i].ProductionQty);
+        //                }
+        //            },
+        //            error: function () {
+        //                $('#RequisitionNo').val('');
+        //                $('#BatchNo').val('');
+        //                $('#ProductName').val('');
+        //                $('#StandardOutput').val('');
+        //                $('#BatchSize').val('');
+        //                $('#ProductionQty').val('');
+        //            }
+        //        });
+
+        //        GetRequisitionDetails(requisitionNo);
+        //    }
+        //});
+
+        $('#SetRequisition').on('click', function () {
+            var processOrderNo = $("input:checked").val();
+            if (processOrderNo != '') {
+
+                $.ajax({
+                    type: "POST",
+                    url: "/RebProduction/SetProcessOrder",
+                    data: { processOrderNo: processOrderNo },
+                    success: function (msg) {
+                        $('#RequisitionNo').val('');
+                        $('#ProductCode').val('');
+                        $('#LinkedProcessNo').val('');
+                        $('#BatchNo').val('');
+                        $('#ProductName').val('');
+                        $('#StandardOutput').val('');
+                        $('#BatchSize').val('');
+                        $('#NumberOfBatch').val();
+                        $('#PreviousProcessedBatchNo').val('');
+                        $('#NoOfBatchInRequisition').val('');
+                        $('#ProductionQty').val('');
+                        $('#PreviousProcessedProductionQty').val('');
+                        for (var i = 0; i < msg.length; i++) {
+                            $('#RequisitionNo').val(msg[i].RequisitionNo);
+
+                            $('#ProductCode').val(msg[i].ProductCode).trigger('change');
+                            $('#LinkedProcessNo').val(msg[i].LinkedProcessNo);
+                            $('#BatchNo').val(msg[i].BatchNo);
+                            $('#ProductName').val(msg[i].ProductName);
+                            $('#StandardOutput').val(msg[i].StandardOutput);
+                            $('#BatchSize').val(msg[i].BatchSize);
+                            $('#NumberOfBatch').val(msg[i].NumberOfBatch);
+                            $('#PreviousProcessedBatchNo').val(msg[i].PreviousProcessedBatchNo);
+                            $('#ProductionQty').val(msg[i].ProductionQty);
+                            $('#NoOfBatchInRequisition').val(msg[i].NoOfBatchInRequisition);
+                            $('#PreviousProcessedProductionQty').val(msg[i].PreviousProcessedProductionQty);
+
+                        }
+                    },
+                    error: function () {
+                        $('#RequisitionNo').val('');
+                        $('#ProductCode').val('').trigger('change');
+                        $('#LinkedProcessNo').val('');
+                        $('#BatchNo').val('');
+                        $('#ProductName').val('');
+                        $('#StandardOutput').val('');
+                        $('#BatchSize').val('');
+                        $('#NumberOfBatch').val();
+                        $('#PreviousProcessedBatchNo').val('');
+                        $('#NoOfBatchInRequisition').val('');
+                        $('#ProductionQty').val('');
+                        $('#PreviousProcessedProductionQty').val('');
+                    }
+                });
+
+                // var x = () => {
+                //     return new Promise(resolve => {                      
+                        
+                //             resolve()
+                //     });
+                // }
+
+                // var y = () => {
+                //     return new Promise((resolve) => {
+                //         setTimeout(function () {
+                //             GetRequisitionDetails(processOrderNo);
+
+                //             resolve();
+                //         }, 2000);
+                //     });
+                // };
+                
+                // x().then(y);
+
+
+
+                //Get FG Product Wise Machine Name for Dropdown
+                $.ajax({
+                    type: "POST",
+                    url: "/RebProduction/GetFGProductWiseMachineList",
+                    data: { processOrderNo: processOrderNo },
+                    success: function (result) {
+
+                        //console.log(result);    
+                        var formoption = "<option value='" + 0 + "'>" + "-- Select Machine --" + "</option>";
+                        for (var i = 0; i < result.length; i++) {
+                            if (result[i].MachineCode != '') {
+                                if (result[i].MachineCode != undefined) {
+                                    formoption += "<option value='" + result[i].MachineCode + "'>" + result[i].MachineName + "</option>";
+                                }
+                            }
+                        }
+                        $('#ManufacMachineCode').html(formoption);
+                        $('#PackMachineCode').html(formoption);
+                        
+                    },
+                    error: function () {
+                       
+                    }
+                }); 
+
+
+            }
+        });
+
+        // $('#ProductionQty').on('change', function () {
+        //     let batchSize = $("#BatchSize").val();
+        //     let standardOutput = $("#StandardOutput").val();
+        //     let producedQuantity = $("#ProductionQty").val();
+    
+        //     let processableNoOfBatch = Number(producedQuantity) / Number(batchSize);
+           
+        //     document.getElementById("NumberOfBatch").value = processableNoOfBatch;
+
+        //     var requisitionNo = $('#RequisitionNo').val();
+        //     var processOrderNo = $('#LinkedProcessNo').val();
+        //     if (processOrderNo.length > 0) {
+        //         GetRequisitionDetails(processOrderNo);
+        //     }
+        // });
+
+        // $('#NumberOfBatch').on('change', function () {
+        //     var requisitionNo = $('#RequisitionNo').val();
+        //     var processOrderNo = $('#LinkedProcessNo').val();
+        //     if (processOrderNo.length > 0) {
+        //         GetRequisitionDetails(processOrderNo);
+        //     }
+        // });
+
+     
+
+        
+
+        $('#btnSearchRequisitionByKey').on('click', function () {
+            var searchKey = $('#searchKey').val();
+            if (searchKey != '') {
+                $.ajax({
+                    type: "POST",
+                    url: "/RebProduction/SearchProcessOrder",
+                    data: { searchKey: searchKey, jsonRequest: true },
+                    success: function (msg) {
+                        $(".js_tbl_body").empty();
+                        var tr = '';
+                        for (var i = 0; i < msg.length; i++) {
+                            tr = $('<tr/>');
+                            @*<td style="display:none"><input name='tblProductDetail.Index' type="hidden" value=@index /></td>*@
+                            tr.append("<td>" + '<input name="RequisitionNo" type="radio" value="' + msg[i].ProcessOrderNo + '"></label>' + "</td>");
+                            // tr.append("<td>" + msg[i].RequisitionNo + "</td>");
+                            tr.append("<td>" + msg[i].ProcessOrderNo + "</td>");  
+                            tr.append("<td>" + msg[i].ProcessOrderDate + "</td>");
+                            tr.append("<td>" + msg[i].ProductCode + "</td>");
+                            tr.append("<td>" + msg[i].ProductName + "</td>");
+                            $('.js_tbl_body').append(tr);
+                        }
+                    },
+                    error: function () {
+                        //$('#RequisitionNo').val('');
+                    }
+                });
+            }
+        });
+
+
+        $("input.calReject").on('focus', function () { $(this).select(); });
+        $("input.calWip").on('focus', function () { $(this).select(); });
+        $("input.calTotalCon").on('focus', function () { $(this).select(); });
+
+    })
+
+
+    // function removeRowItem(id) {
+    //     var controlToBeRemoved = "#trtbProductionBOMDtl" + id;
+    //     //alert(controlToBeRemoved);
+    //     $(controlToBeRemoved).remove();
+    // }
+
+
+    function cloneRow(e) {
+        var table = $("#htProductionMaterialDetail");
+        var eid = e.id.split('_');
+        var rowId = eid[0]+"_"+eid[1];
+
+        let materialCodeId = eid[0] + "_" + eid[1] + "_" + "MaterialCode";
+        let materialNameId = eid[0] + "_" + eid[1] + "_" + "MaterialName";
+        let unitId = eid[0] + "_" + eid[1] + "_" + "Unit";
+        let requiredQtyId = eid[0] + "_" + eid[1] + "_" + "ReqQuantity";
+        let issuedQtyId = eid[0] + "_" + eid[1] + "_" + "IssuedQty";
+        let previousUsedQtyCellid = eid[0] + "_" + eid[1] + "_" + "PreviousUsedQty";
+        let stdConsumptionQtyCellid = eid[0] + "_" + eid[1] + "_" + "StdConsumptionQty";
+        let processLossCellid = eid[0] + "_" + eid[1] + "_" + "ProcessLoss";
+        let wastageCellid = eid[0] + "_" + eid[1] + "_" + "Wastage";
+        let currentUseQtyId = eid[0] + "_" + eid[1] + "_" + "CurrentUseQty";
+        let floorstockid = eid[0] + "_" + eid[1] + "_" + "FloorStock";
+        let TotalConsumptionid = eid[0] + "_" + eid[1] + "_" + "TotalConsumption";
+
+
+        let materialCode = $("#" + materialCodeId).val();
+        let materialName = $("#" + materialNameId).val();   
+        let unit = $("#" + unitId).val();
+
+        let requiredQty = 0; // $("#" + requiredQtyId).val();
+        let issuedQty = 0; //$("#" + issuedQtyId).val();
+        let previousUsedQty = $("#" + previousUsedQtyCellid).val();
+        let stdConsumptionQty = 0; //$("#" + stdConsumptionQtyCellid).val();
+        let processLoss = 0;//$("#" + processLossCellid).val();
+        let currentUseQty = $("#" + currentUseQtyId).val();
+        let wastage = $("#" + wastageCellid).val();
+        let floorstock = 0;//$("#" + floorstockid).val();
+        let newFloorStock = floorstock - currentUseQty;
+        let TotalConsumption = $("#" + TotalConsumptionid).val();
+
+
+
+        let parentRow = $(e).closest("tr");
+
+     
+
+        var table = $("#htProductionMaterialDetail tbody");
+
+        var index = $("#tblProductionBOMDtl").children("tr").length;
+        var indexCell = "<td style='display:none'><input name='tblProductionProcessDetail.Index' type='hidden' value='" + index + "' /></td>";
+        var materialCodeCell = "<td><input style='width:100%' class='form-control nothing' readonly id='tblProductionProcessDetail_" + index + "_MaterialCode' name='tblProductionProcessDetail[" + index + "].MaterialCode' type='text' value='" + materialCode + "' /></td>";
+        var materialNameCell = "<td><input style='width:100%' class='form-control nothing' readonly id='tblProductionProcessDetail_" + index + "_MaterialName' name='tblProductionProcessDetail[" + index + "].MaterialName' type='text' value='" + materialName + "' /></td>";
+        var unitCell = "<td><input style='width:100%' class='form-control nothing' readonly id='tblProductionProcessDetail_" + index + "_Unit' name='tblProductionProcessDetail[" + index + "].Unit' type='text' value='" + unit + "' /></td>";
+        var requiredQtyCell = "<td style='display:none'><input style='text-align:right; width:100%' class='form-control nothing' readonly  id='tblProductionProcessDetail_" + index + "_ReqQuantity' name='tblProductionProcessDetail[" + index + "].ReqQuantity' type='text' value='" + requiredQty + "' /></td>";
+        //var issuedQtyCell = "<td><input style='text-align:right; width:100%' class='form-control nothing' readonly id='tblProductionProcessDetail_" + index + "_IssuedQty' name='tblProductionProcessDetail[" + index + "].IssuedQty' type='text' value='" + elem.IssuedQty + "' /></td>";
+        var issuedQtyCell = "<td style='display:none';><input style='text-align:right; width:100%' class='form-control nothing' readonly id='tblProductionProcessDetail_" + index + "_IssuedQty' name='tblProductionProcessDetail[" + index + "].IssuedQty' type='text' value='" + issuedQty + "' /></td>";
+        var previousUsedQtyCell = "<td style='display:none;' ><input text-align:right; width:100%' class='form-control nothing' readonly id='tblProductionProcessDetail_" + index + "_PreviousUsedQty' name='tblProductionProcessDetail[" + index + "].PreviousUsedQty' type='text' value='" + previousUsedQty + "' /></td>";
+        //var stdConsumptionQtyCell = "<td><input class='form-control nothing' style='text-align:right; width:100%' readonly id='tblProductionProcessDetail_" + index + "_StdConsumptionQty' name='tblProductionProcessDetail[" + index + "].StdConsumptionQty' type='text' value='" + elem.StdConsumptionQty + "' /></td>";
+        var stdConsumptionQtyCell = "<td style='display:none'><input class='form-control nothing calStdConsum' style='text-align:right; width:100%' readonly id='tblProductionProcessDetail_" + index + "_StdConsumptionQty' name='tblProductionProcessDetail[" + index + "].StdConsumptionQty' type='text' value='" + stdConsumptionQty + "' /></td>";
+
+
+        var RequistionNoCell = "<td> <select class='calRequisitionNo  '  style='text-align:right;  width:100%' data-id='" + materialCode + "' id='tblProductionProcessDetail_" + index + "_RequisitionNo' name='tblProductionProcessDetail[" + index + "].RequisitionNo' onchange='GetGRNData(this)' > <option selected vlaue=''> Select </select></td>";
+
+        var GRNNoCell = "<td><select class='calGRNNo form-select form-select-lg' style='text-align:right; width:100%' onchange='SetFloorStock(this)' data-id='" + materialCode + "'   id='tblProductionProcessDetail_" + index + "_GRNNo' name='tblProductionProcessDetail[" + index + "].GRNNo'></select></td>";
+        var currentUseQtyCell = "<td><input class='calTotalCon' onkeypress='return isNumberKey(event)' style='text-align:right; width:100%' id='tblProductionProcessDetail_" + index + "_CurrentUseQty' name='tblProductionProcessDetail[" + index + "].CurrentUseQty' type='text'   value='0' /></td>";
+        var processLossCell = "<td  style='display:none'><input onkeypress='return isNumberKey(event)' style='text-align:right; width:100%' readonly class='form-control nothing' id='tblProductionProcessDetail_" + index + "_ProcessLoss' name='tblProductionProcessDetail[" + index + "].ProcessLoss' type='text' value='" + processLoss + "' /></td>";
+        //var wastageCell = "<td><input class='calTotalCon' onkeypress='return isNumberKey(event)' style='text-align:right; width:100%'  id='tblProductionProcessDetail_" + index + "_Wastage' name='tblProductionProcessDetail[" + index + "].Wastage' type='text' value='" + elem.Wastage + "' /></td>";
+        var wastageCell = "<td  style='display:none'><input class='calWastage form-control nothing' readonly onkeypress='return isNumberKey(event)' style='text-align:right; width:100%'  id='tblProductionProcessDetail_" + index + "_Wastage' name='tblProductionProcessDetail[" + index + "].Wastage' type='text' value='" + wastage + "' /></td>";
+
+        var wipcell = "<td  style=''><input class='calWip '  onkeypress='return isNumberKey(event)' onfocus='this.select()' style='text-align:right; width:100%'  id='tblProductionProcessDetail_" + index + "_Wip' name='tblProductionProcessDetail[" + index + "].Wip' type='text' value='0' /></td>";
+        var rejectll = "<td  style=''><input class='calReject '  onkeypress='return isNumberKey(event)' onfocus='this.select()' style='text-align:right; width:100%'  id='tblProductionProcessDetail_" + index + "_RejectQty' name='tblProductionProcessDetail[" + index + "].RejectQty' type='text' value='0' /></td>";
+
+        var totalConsumptionCell = "<td style='display:none'><input class='totalConsume form-control nothing' onkeypress='return isNumberKey(event)' style='text-align:right; width:100%' readonly id='tblProductionProcessDetail_" + index + "_TotalConsumption' name='tblProductionProcessDetail[" + index + "].TotalConsumption' type='text' value='" + TotalConsumption + "' /></td>";
+        var floorStockQtyCell = "<td><input disabled class='calFloorStock' onkeypress='return isNumberKey(event)' style='text-align:right; width:100%' id='tblProductionProcessDetail_" + index + "_FloorStock' name='tblProductionProcessDetail[" + index + "].FloorStock' type='text' value='" + floorstock + "' /></td>";
+
+
+        var removeCell = "<td> <button class='btn' data-toggle='tooltip' data-placement='top' title='Duplicate Material' style='background:maroon'type='button' class='removeButton' onclick='removeRowItem(" + index + ");'><i class='fas fa-minus' style='color:white'aria-hidden='true'></i></button> </td>";
+
+       // var removeCell = "<td style=''><input id='remvRowToTable' class='btn' style='background:red' type='button' value='remove' onclick='removeRowItem(" + index + ");' /></td>";
+        // var cloneCell = "<td> <button class='btn' data-toggle='tooltip' data-placement='top' title='Duplicate Material' style='background: darkslategrey'type='button' class='cloneButton' onclick='cloneRow(this)'><i class='fas fa-plus' style='color:white'aria-hidden='true'></i></button> </td>";
+
+        var newRow = "<tr id='trtbProductionBOMDtl" + index + "'>" + indexCell + materialCodeCell + materialNameCell + unitCell + requiredQtyCell + issuedQtyCell + previousUsedQtyCell + stdConsumptionQtyCell /* + RequistionNoCell */ + GRNNoCell + currentUseQtyCell + rejectll + wipcell + processLossCell + wastageCell + totalConsumptionCell + floorStockQtyCell + removeCell  + "</tr>";
+        table.append(newRow);
+    }
+
+    function GetRequisitionDetails(requisitionNo) {
+                
+            var requisitionNoOfBatch = document.getElementById("NoOfBatchInRequisition").value;
+            var standardOutput = document.getElementById("StandardOutput").value;
+            var previousProcessedNoOfBatch = document.getElementById("PreviousProcessedBatchNo").value;
+            var currentProcessNoOfBatch = document.getElementById("NumberOfBatch").value;
+
+            //// Commented on 20230802---Rasel Alam
+            //if (parseFloat(currentProcessNoOfBatch) + parseFloat(previousProcessedNoOfBatch) > parseFloat(requisitionNoOfBatch)) {
+            //    var processableNoOfBatch = parseFloat(requisitionNoOfBatch) - parseFloat(previousProcessedNoOfBatch)
+            //    alert("Maximum Processable No of Batch is ---:" + processableNoOfBatch)
+            //    document.getElementById("NumberOfBatch").value = processableNoOfBatch;
+            //    document.getElementById("ProductionQty").value = Number(processableNoOfBatch)*Number(standardOutput);
+            //}
+
+
+            
+            var productionQty = $('#NumberOfBatch').val();
+            $.ajax({
+                type: "POST",
+            url: "/Production/GetProcessOrderDetails",
+                data: { processOrderNo: requisitionNo, productionQty: productionQty},
+                success: function (result) {
+                    //console.log(result);
+                    $('#tblProductionBOMDtl').empty(); //Clear table body
+                    var table = $("#htProductionMaterialDetail tbody");
+                    $.each(result, function (idx, elem) {
+
+                        var index = $("#tblProductionBOMDtl").children("tr").length;
+                        var indexCell = "<td style='display:none'><input name='tblProductionProcessDetail.Index' type='hidden' value='" + index + "' /></td>";
+                        var materialCodeCell = "<td><input style='width:100%' class='form-control nothing' readonly id='tblProductionProcessDetail_" + index + "_MaterialCode' name='tblProductionProcessDetail[" + index + "].MaterialCode' type='text' value='" + elem.MaterialCode + "' /></td>";
+                        var materialNameCell = "<td><input style='width:100%' class='form-control nothing' readonly id='tblProductionProcessDetail_" + index + "_MaterialName' name='tblProductionProcessDetail[" + index + "].MaterialName' type='text' value='" + elem.MaterialName + "' /></td>";
+                        var unitCell = "<td><input style='width:100%' class='form-control nothing' readonly id='tblProductionProcessDetail_" + index + "_Unit' name='tblProductionProcessDetail[" + index + "].Unit' type='text' value='" + elem.Unit + "' /></td>";
+                        var requiredQtyCell = "<td style='display:none'><input style='text-align:right; width:100%' class='form-control nothing' readonly  id='tblProductionProcessDetail_" + index + "_ReqQuantity' name='tblProductionProcessDetail[" + index + "].ReqQuantity' type='text' value='" + elem.ReqQuantity + "' /></td>";
+                        //var issuedQtyCell = "<td><input style='text-align:right; width:100%' class='form-control nothing' readonly id='tblProductionProcessDetail_" + index + "_IssuedQty' name='tblProductionProcessDetail[" + index + "].IssuedQty' type='text' value='" + elem.IssuedQty + "' /></td>";
+                        var issuedQtyCell = "<td style='display:none';><input style='text-align:right; width:100%' class='form-control nothing' readonly id='tblProductionProcessDetail_" + index + "_IssuedQty' name='tblProductionProcessDetail[" + index + "].IssuedQty' type='text' value='" + elem.IssuedQty + "' /></td>";
+                        var previousUsedQtyCell = "<td style='display:none;' ><input text-align:right; width:100%' class='form-control nothing' readonly id='tblProductionProcessDetail_" + index + "_PreviousUsedQty' name='tblProductionProcessDetail[" + index + "].PreviousUsedQty' type='text' value='" + elem.PreviousUsedQty + "' /></td>";
+                        //var stdConsumptionQtyCell = "<td><input class='form-control nothing' style='text-align:right; width:100%' readonly id='tblProductionProcessDetail_" + index + "_StdConsumptionQty' name='tblProductionProcessDetail[" + index + "].StdConsumptionQty' type='text' value='" + elem.StdConsumptionQty + "' /></td>";
+                        var stdConsumptionQtyCell = "<td style='display:none'><input class='form-control nothing calStdConsum' style='text-align:right; width:100%' readonly id='tblProductionProcessDetail_" + index + "_StdConsumptionQty' name='tblProductionProcessDetail[" + index + "].StdConsumptionQty' type='text' value='" + elem.StdConsumptionQty + "' /></td>";
+
+                        
+                        //var RequistionNoCell = "<td> <select class='calRequisitionNo  '  style='text-align:right;  width:100%' data-id='"+elem.MaterialCode +"' id='tblProductionProcessDetail_" + index + "_RequisitionNo' name='tblProductionProcessDetail[" + index + "].RequisitionNo' onchange='GetGRNData(this)' > <option selected vlaue=''> Select </select></td>";
+
+                        var GRNNoCell = "<td><select class='calGRNNo form-select form-select-lg' data-id='" + elem.MaterialCode + "'  style='text-align:right; width:100%' onchange='SetFloorStock(this)'   id='tblProductionProcessDetail_" + index + "_GRNNo' name='tblProductionProcessDetail[" + index + "].GRNNo'></select></td>";
+                        var currentUseQtyCell = "<td><input class='calTotalCon' onkeypress='return isNumberKey(event)' style='text-align:right; width:100%' id='tblProductionProcessDetail_" + index + "_CurrentUseQty' name='tblProductionProcessDetail[" + index + "].CurrentUseQty' type='text'   value='" + elem.CurrentUseQty + "' /></td>";
+                        var processLossCell = "<td  style='display:none'><input onkeypress='return isNumberKey(event)' style='text-align:right; width:100%' readonly class='form-control nothing' id='tblProductionProcessDetail_" + index + "_ProcessLoss' name='tblProductionProcessDetail[" + index + "].ProcessLoss' type='text' value='" + elem.ProcessLoss + "' /></td>";
+                        //var wastageCell = "<td><input class='calTotalCon' onkeypress='return isNumberKey(event)' style='text-align:right; width:100%'  id='tblProductionProcessDetail_" + index + "_Wastage' name='tblProductionProcessDetail[" + index + "].Wastage' type='text' value='" + elem.Wastage + "' /></td>";
+                        var wastageCell = "<td  style='display:none'><input class='calWastage form-control nothing' readonly onkeypress='return isNumberKey(event)' style='text-align:right; width:100%'  id='tblProductionProcessDetail_" + index + "_Wastage' name='tblProductionProcessDetail[" + index + "].Wastage' type='text' value='" + elem.Wastage + "' /></td>";
+
+                    var wipcell = "<td  style=''><input onfocus='this.select()' class='calWip valid'  onkeypress='return isNumberKey(event)' style='text-align:right; width:100%'  id='tblProductionProcessDetail_" + index + "_Wip' name='tblProductionProcessDetail[" + index + "].Wip' type='text' value='" + elem.Wip + "' /></td>";
+                    var rejectll = "<td  style=''><input onfocus='this.select()' class='calReject valid'  onkeypress='return isNumberKey(event)' style='text-align:right; width:100%'  id='tblProductionProcessDetail_" + index + "_RejectQty' name='tblProductionProcessDetail[" + index + "].RejectQty' type='text' value='" + elem.RejectQty + "' /></td>";
+
+                        var totalConsumptionCell = "<td style='display:none'><input class='totalConsume form-control nothing' onkeypress='return isNumberKey(event)' style='text-align:right; width:100%' readonly id='tblProductionProcessDetail_" + index + "_TotalConsumption' name='tblProductionProcessDetail[" + index + "].TotalConsumption' type='text' value='" + elem.TotalConsumption + "' /></td>";
+                        var floorStockQtyCell = "<td><input disabled class='calFloorStock' onkeypress='return isNumberKey(event)' style='text-align:right; width:100%' id='tblProductionProcessDetail_" + index + "_FloorStock' name='tblProductionProcessDetail[" + index + "].FloorStock' type='text' value='" + elem.FloorStock + "' /></td>";
+
+                    
+                    
+                        var removeCell = "<td style='display:none'><input id='addRowToTable' type='button' value='Remove' onclick='removeRowItem(" + index + ");' /></td>";
+                    var cloneCell = "<td> <button class='btn'id='tblProductionProcessDetail_"+index+"_btn' data-toggle='tooltip' data-placement='top' title='Duplicate Material' style='background: darkslategrey'type='button' class='cloneButton' onclick='cloneRow(this)'><i class='fas fa-plus' style='color:white'aria-hidden='true'></i></button> </td>";
+
+                        var newRow = "<tr id='trtbProductionBOMDtl" + index + "'>" + indexCell + materialCodeCell + materialNameCell + unitCell + requiredQtyCell + issuedQtyCell + previousUsedQtyCell + stdConsumptionQtyCell /* + RequistionNoCell */ + GRNNoCell + currentUseQtyCell + rejectll + wipcell + processLossCell + wastageCell + totalConsumptionCell + floorStockQtyCell + removeCell + cloneCell + "</tr>";
+                        table.append(newRow);
+
+                    });
+
+                },
+                error: function () {
+                    //$('#RequisitionNo').val('');
+                }
+            });
+        }
+
+</script>

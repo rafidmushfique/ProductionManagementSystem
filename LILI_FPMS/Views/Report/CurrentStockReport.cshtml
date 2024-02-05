@@ -1,0 +1,124 @@
+﻿@model IEnumerable<CurrentStockViewModel>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h2>Current Stock Report</h2>
+            </div>
+            <div class="ibox-content" style="min-height: 6em;padding: .5em 0 0 0;">
+                <form action="/Report/CurrentStockReport" method="get">
+                    <div class="row">
+
+
+                        <div class="col-sm-2">
+                            <label>Category</label>
+                            @Html.DropDownList("materialCategory", new SelectList(ViewBag.materialCategory, "Value", "Text"), new { @class = "form-control" })
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label>Unit/Sub-Business</label>
+                            @Html.DropDownList("subBusiness", new SelectList(ViewBag.subBusiness, "SubBusinessCode", "SubBusinessName"), new { @class = "form-control" })
+                        </div>
+
+
+
+               
+                        <div class="col-sm-2">
+                            <button type="submit" class="btn btn-primary" style="margin-top: 1.7em;">Search</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model != null)
+{
+    <div class="row" style="margin-bottom:5em;">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content" style="width: 100%;display: block;overflow-y: auto;height:75vh">
+                    <table id="myTable" class="table">
+                        <thead style="border:none;">
+                            @*<tr style="margin:0;padding:0;border:none;">*@
+                        <th style="border-left:1px solid white;">@Html.LabelFor(m => m.First().PlantId)</th>
+                        <th style="border-left:1px solid white;">@Html.LabelFor(m => m.First().Period)</th>
+                        <th style="border-left:1px solid white;">@Html.LabelFor(m => m.First().MaterialCode)</th>
+                        <th style="border-left:1px solid white;">@Html.LabelFor(m => m.First().MaterialName)</th>
+@*                         <th style="border-left:1px solid white;">@Html.LabelFor(m => m.First().OpeningQuantity)</th>
+                        <th style="border-left:1px solid white;">@Html.LabelFor(m => m.First().ReceiveQuantity)</th>
+                        <th style="border-left:1px solid white;">@Html.LabelFor(m => m.First().Consumption)</th>
+                        <th style="border-left:1px solid white;">@Html.LabelFor(m => m.First().ReturnQuantity)</th> *@
+                        <th style="border-left:1px solid white;">@Html.LabelFor(m => m.First().ClosingBalance)</th>
+                            @*</tr>*@
+                        </thead>
+                        <tbody>
+                            @foreach (CurrentStockViewModel vm in Model)
+                            {
+                                <tr>
+                                    <td style="text-align:right;">@vm.PlantId</td>
+                                    <td style="text-align:left;">@vm.Period</td>
+                                    <td style="text-align:left;">@vm.MaterialCode</td>
+                                    <td style="text-align:left;">@vm.MaterialName</td>
+@*                                     <td style="text-align:right;">@vm.OpeningQuantity.ToString("N")</td>
+                                    <td style="text-align:right;">@vm.ReceiveQuantity.ToString("N")</td>
+                                    <td style="text-align:right;">@vm.Consumption.ToString("N")</td>
+                                    <td style="text-align:right;">@vm.ReturnQuantity.ToString("N")</td> *@
+                                    <td style="text-align:right;">@vm.ClosingBalance.ToString("N")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section css
+    {
+    <link rel="stylesheet" href="~/lib/datatable/datatable.min.css" />
+
+
+}
+
+@section Scripts
+    {
+    <script src="~/lib/datatable/datatables.min.js"></script>
+    <script src="~/lib/datatable/pdfmake.min.js"></script>
+    <script src="~/lib/datatable/vfs_fonts.js"></script>
+    <script>
+
+
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                fixedHeader: true,
+                "scrollY": true,
+                scrollY: 450,
+                paging: false,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5'
+                    },
+
+                    {
+                        extend: 'pdfHtml5',
+                        orientation: 'portrait',
+                        title: function () {
+                            return "Current Stock"
+                        },
+                        pageSize: 'LEGAL',
+                        text: '<i class="fa fa-file-pdf-o"> PDF</i>',
+                        titleAttr: 'PDF'
+                    }
+                ],
+
+            });
+        });
+    </script>
+}

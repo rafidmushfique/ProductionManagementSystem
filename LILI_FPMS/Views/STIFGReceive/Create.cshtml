@@ -1,0 +1,194 @@
+﻿@model LILI_FPMS.Models.TblRebStifgreceive
+
+
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <strong>Error:</strong> @ViewData.ModelState.Values.SelectMany(v => v.Errors).FirstOrDefault().ErrorMessage
+    </div>
+}
+<div id="modal-placeholder"></div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Submission Blocked</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMsg"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content-header">
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">FGIN-STI Receive Information</li>
+        <li class="active">Add FGIN-STI Receive</li>
+    </ol>
+</section>
+
+<section class="content container-fluid">
+
+    <div class="card " style="border:1px solid; border-color:cadetblue; padding:10px">
+
+        <form class="form-horizontal" asp-controller="STIFGReceive" method="post" asp-action="CreateReceive">
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">Receive No</label>
+                    <div class="col-sm-3">
+                        <input type="text" asp-for="StifgreceiveNo" class="form-control" placeholder="StifgreceiveNo" readonly>
+                        <span asp-validation-for="StifgreceiveNo"></span>
+                    </div>
+
+                    <label asp-for="StifgreceiveDate" class="col-sm-2 col-sm-offset-1  control-label"> Receive Date</label>
+                    <div class='col-sm-2 input-group date'style="padding-left:15px;">
+                        <input asp-for="StifgreceiveDate" type='Date' class="form-control" />
+                        <span asp-validation-for="StifgreceiveDate" class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">STI No</label>
+                    <div class="col-sm-2">
+                        <input type="text" asp-for="Stino" class="form-control" placeholder="Stino" readonly>
+                        <span asp-validation-for="Stino"></span>
+                    </div>
+                    <div class="col-sm-2 controls">
+                        <button type="button" class="btn btn-info" data-toggle="ajax-modal" data-target="#add-Stino" data-url="@Url.Action("addSTINo")">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </div>
+                    <input type="hidden" asp-for="Stistock" class="form-control" placeholder="Stistock" value="0">
+@*                    <div class="col-sm-2">
+                        <button type="button" class="btn btn-mini btn-primary" data-toggle="ajax-modal" data-target="#add-Requisition" data-url="">
+                            Search
+                        </button>
+                    </div>*@
+       @*              <label for="inputEmail3" class="col-sm-2 control-label">STI Stock</label>
+                    <div class="col-sm-3">
+                        <input type="text" asp-for="Stistock" class="form-control" placeholder="Stistock">
+                        <span asp-validation-for="Stistock"></span>
+                      
+                    </div> *@
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="ReceiveComment">Comments</label>
+                    <div class="col-sm-9">
+                        <textarea class="form-control" placeholder="ReceiveComment" id="ReceiveComment" name="ReceiveComment" style="height:100px"></textarea>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div style="border:0px solid #ccc; min-width:30%;  overflow:hidden;">
+                        <table id="htFGTNDetail" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center; width:5%">FG Code</th>
+                                    <th style="text-align:center; width:10%">FG Name</th>
+                                    <th style="text-align:center; width:5%">Unit</th>
+                                    <th style="text-align:center; width:7%">STI Quantity</th>
+                                   <th style="text-align:center; width:7%">Receive Quantity</th>
+                                    <th style="text-align:center; width:7%">Actual Receive</th>
+                                    <th style="text-align:center; width:15%">Comments</th>
+                                   
+                                </tr>
+                            </thead>
+                            <tbody id="htSTIFGDetailGrid">
+
+
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+        
+            <div class="box-footer">
+
+                <a class="btn btn-mini btn-primary" href='@Url.Content("/STIFGReceive/Index")'>Cancel</a>
+                <button type="submit" class="btn btn-info pull-right">Create</button>
+
+            </div>
+       
+        </form>
+    </div>
+
+</section>
+
+
+
+<script type="text/javascript">
+
+    // $("#Stino").change(function () {
+
+    //     //alert(1);
+
+    //     var table = $("#htSTIFGDetailGrid");
+    //     table.empty();
+    //     var stiNo = $("#Stino").val();
+    //     //alert(stiNo);
+    //     var date = new Date();
+    //     var DateNow = date.getDate();
+    //     $.ajax({
+    //         url: '@Url.Action("GetSTIFGDetials", "STIFGReceive")', // Replace with your controller action URL
+    //         type: 'POST',
+    //         data: {
+    //             StiNo: stiNo,
+    //         },
+    //         success: function (result) {
+    //             console.log(result);
+               
+    //             var receiveQuantity = 0;
+               
+    //             $.each(result, function (idx, elem) {
+    //                 //alert(elem.fgcode);
+    //                 var stifgrcvno = $("#StifgreceiveNo").val();
+                  
+
+    //                 var index = $("#htSTIFGDetailGrid").children("tr").length;
+    //                 var indexCell = "<td style='display:none'><input name='TblRebStifgreceiveDetail.Index' type='hidden' value='" + index + "' /></td>";
+
+    //                 var stifgrcvno = "<td style='display:none'> <input type='hidden' class='calStiFgRecvNo' style='text-align:right; width:100%' id='TblRebStifgreceiveDetail_" + index + "_StifgreceiveNo' name='TblRebStifgreceiveDetail[" + index + "].StifgreceiveNo' value='" + stifgrcvno + "'  readonly /> </td>";
+    //                 var fgCode = "<td> <input type='text' class='calFgCode readonly' style='text-align:right; width:100%' id='TblRebStifgreceiveDetail_" + index + "_Fgcode' name='TblRebStifgreceiveDetail[" + index + "].Fgcode' value='" + elem.Fgcode + "'  readonly /> </td>";
+    //                 var fgName = "<td> <input type='text' class='calFgName readonly' style='text-align:right; width:100%' id='TblRebStifgreceiveDetail_" + index + "_Fgname'  name='TblRebStifgreceiveDetail[" + index + "].Fgname'  value='" + elem.Fgname + "' readonly /> </td>";
+    //                 var unit = "<td> <input type='text' class='calUnit readonly' style='text-align:right; width:100%' id='TblRebStifgreceiveDetail_" + index + "_Unit'  name='TblRebStifgreceiveDetail[" + index + "].Unit' value='" + elem.Unit + "' readonly /> </td>";
+    //                 var stiQuantity = "<td> <input type='text' class='calStiQty' style='text-align:right; width:100%' id='TblRebStifgreceiveDetail_" + index + "_Stiquantity'  name='TblRebStifgreceiveDetail[" + index + "].Stiquantity' value='" + elem.Stiquantity + "' /> </td>";
+
+    //                 var recieveQty = "<td> <input type='text' class='calRecieveQty' style='text-align:right; width:100%' id='TblRebStifgreceiveDetail_" + index + "_ReceiveQuantity'  name='TblRebStifgreceiveDetail[" + index + "].ReceiveQuantity' value='0' /> </td>";
+    //                 var actualReceiveQty = "<td> <input type='text' class='calActualRecQty' style='text-align:right; width:100%' id='TblRebStifgreceiveDetail_" + index + "_ActualReceiveQty' name='TblRebStifgreceiveDetail[" + index + "].ActualReceiveQty' value='0' /> </td>";
+
+    //                 var comments = "<td> <input type='text' class='calComments' style='text-align:right; width:100%' id='TblRebStifgreceiveDetail_" + index + "_Comments' name='TblRebStifgreceiveDetail[" + index + "].Comments'/> </td>";
+
+    //                 var removeCell = "<td style='text-align: center;'><input id='addRowToTable' type='button' class='btn btn-danger' value='Remove' onclick='removeRowItem(" + index + ");' /></td>";
+
+    //                 var newRow = "<tr id='TblRebStifgreceiveDetail" + index + "'>" + indexCell + stifgrcvno + fgCode + fgName + unit + stiQuantity + recieveQty + actualReceiveQty + comments + "</tr>";
+
+    //                 table.append(newRow);
+    //             });
+    //         },
+    //         error: function (error) {
+    //            // debugger;
+    //             //alert(3);
+    //             console.log(error.responseText);
+    //         }
+    //     });
+
+    // });
+
+</script>
+
+
+

@@ -1,0 +1,160 @@
+﻿@model LILI_FPMS.Models.TblRebStifgreceive
+
+<div id="modal-placeholder"></div>
+
+
+
+
+<section class="content-header">
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">FGIN-STI Receive Information</li>
+        <li class="active">Add FGIN-STI Receive</li>
+    </ol>
+</section>
+
+<section class="content container-fluid">
+
+    <div class="box box-info" style="border:1px solid; border-color:cadetblue; padding:10px">
+
+        <form class="form-horizontal" asp-controller="STIFGReceive" method="post" asp-action="UpdateReceive">
+            <input type="hidden" name="Id" value="@Model.Id" />
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">FGTN No</label>
+                    <div class="col-sm-3">
+                        <input type="text" asp-for="StifgreceiveNo" class="form-control" placeholder="Fgtnno" readonly>
+                        <span asp-validation-for="StifgreceiveNo"></span>
+                    </div>
+
+                    <label asp-for="StifgreceiveDate" class="col-sm-2 col-sm-offset-1  control-label"> Receive Date</label>
+                    <div class='col-sm-2 input-group date' style="padding-left:15px;">
+                        <input asp-for="StifgreceiveDate" type='Date' class="form-control" />
+                        <span asp-validation-for="StifgreceiveDate" class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">STI No</label>
+                    <div class="col-sm-2">
+                        <input type="text" asp-for="Stino" class="form-control readonly" placeholder="Stino" readonly>
+                        <span asp-validation-for="Stino"></span>
+                    </div>
+                    <div class="col-sm-2">
+                  @*       <button type="button" class="btn btn-mini btn-primary" data-toggle="ajax-modal" data-target="#add-Requisition" data-url="">
+                            Search
+                        </button> *@
+                    </div>
+                    <input type="hidden" asp-for="Stistock" class="form-control readonly" placeholder="Stistock" value="0" readonly>
+                  @*   <label for="inputEmail3" class="col-sm-2 control-label">STI Stock</label>
+                    <div class="col-sm-3">
+                        <input type="text" asp-for="Stistock" class="form-control readonly" placeholder="Stistock" readonly >
+                        <span asp-validation-for="Stistock"></span>
+
+                    </div> *@
+                </div>
+@*                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">Comments</label>
+                    <div class="col-sm-2">
+                        <input type="text" asp-for="ReceiveComment" class="form-control" placeholder="ReceiveComment">
+                        <span asp-validation-for="ReceiveComment"></span>
+                    </div>
+
+                </div>
+*@
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="ReceiveComment">Comments</label>
+                    <div class="col-sm-9">
+                        <textarea class="form-control" asp-for="ReceiveComment" placeholder="ReceiveComment" name="ReceiveComment" style="height:100px"></textarea>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div style="border:0px solid #ccc; min-width:30%;  overflow:hidden;">
+                        <table id="htFGTNDetail" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center; width:5%">FG Code</th>
+                                    <th style="text-align:center; width:10%">FG Name</th>
+                                    <th style="text-align:center; width:5%">Unit</th>
+                                    <th style="text-align:center; width:7%">STI Quantity</th>
+                                    <th style="text-align:center; width:7%">Receive Quantity</th>
+                                    <th style="text-align:center; width:7%">Actual Receive</th>
+                                    <th style="text-align:center; width:15%">Comments</th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="htSTIFGDetailGrid">
+                                @if (Model.TblRebStifgreceiveDetail != null)
+                                {
+                                    var i = 0;
+                                    @foreach (var item in Model.TblRebStifgreceiveDetail)
+                                    {
+                                        
+                                        @*   <tr>
+                                    <td>@item.Fgcode</td>
+                                    <td>@item.Fgname</td>
+                                    <td>@item.Unit</td>
+                                    <td style="text-align:right">@item.Stiquantity</td>
+                                    <td style="text-align:right">@item.ReceiveQuantity</td>
+                                    <td style="text-align:right"> @item.ActualReceiveQty</td>
+                                    <td>@item.Comments</td>
+                                    </tr> *@
+                                        <tr>
+                                            <td style="display:none">@Html.EditorFor(model => model.TblRebStifgreceiveDetail[i].StifgreceiveNo, new { htmlAttributes = new { @class = "form-control", @style = "text-align:right", @readonly = "readonly" } })</td>
+                                            <td>@Html.EditorFor(model => model.TblRebStifgreceiveDetail[i].Fgcode, new { htmlAttributes = new { @class = "form-control", @style = "text-align:right",@readonly="readonly" } })</td>
+                                            <td>@Html.EditorFor(model => model.TblRebStifgreceiveDetail[i].Fgname, new { htmlAttributes = new { @class = "form-control", @style = "text-align:right", @readonly = "readonly" } })</td>
+                                            <td>@Html.EditorFor(model => model.TblRebStifgreceiveDetail[i].Unit, new { htmlAttributes = new { @class = "form-control", @style = "text-align:right", @readonly = "readonly" } })</td>
+                                            <td>@Html.EditorFor(model => model.TblRebStifgreceiveDetail[i].Stiquantity, new { htmlAttributes = new { @class = "form-control", @style = "text-align:right", @readonly = "readonly" } })</td>
+                                            <td>@Html.EditorFor(model => model.TblRebStifgreceiveDetail[i].ReceiveQuantity, new { htmlAttributes = new { @class = "form-control",  @style="text-align:right" } })</td>
+                                            <td>@Html.EditorFor(model => model.TblRebStifgreceiveDetail[i].ActualReceiveQty, new { htmlAttributes = new { @class = "form-control", @style = "text-align:right" } })</td>
+                                            <td>@Html.EditorFor(model => model.TblRebStifgreceiveDetail[i].Comments, new { htmlAttributes = new { @class = "form-control" } })</td>
+                                        </tr>
+                                    }
+                                }
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="box-footer">
+
+                <a class="btn btn-mini btn-primary" href='@Url.Content("/STIFGReceive/Index")'>Cancel</a>
+                <button type="submit" class="btn btn-info pull-right">Update</button>
+
+            </div>
+
+        </form>
+    </div>
+
+</section>
+
+
+
+
+<script type="text/javascript">
+
+     $(document).ready(function () {
+        // Set the max date to today
+        $("#StifgreceiveDate").attr("max", getToday());
+        
+        // Function to get today's date in the required format (YYYY-MM-DD)
+        function getToday() {
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+            var yyyy = today.getFullYear();
+
+            return yyyy + '-' + mm + '-' + dd;
+        }
+       
+    });
+
+</script>
+
+

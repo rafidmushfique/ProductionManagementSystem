@@ -1,0 +1,217 @@
+﻿@model LILI_FPMS.Models.VMAllCurrentSTINo
+<!-- Modal -->
+<div class="modal fade" id="add-Stino" tabindex="-1" role="dialog" aria-labelledby="addContactLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#0c8599; color:white;">
+                <h5 class="modal-title" id="addContactLabel">Add Requisition</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" asp-action="SearchRequisition" style="padding-bottom:30px">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                                <input type="text" asp-for="STINo" class="form-control" placeholder="STINo">
+                                <span asp-validation-for="STINo"></span>
+                            </div>
+                            <div class="col-sm-2">
+                                <a id="btnSearchRequisition" class="btn btn-primary">search</a>
+                            </div>
+                        </div>
+
+                        <table id="tblRequisitionMaster" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="width:1%"></th>
+                                    <th style="width:10%"> STI No</th>
+                                    <th style="width:10%"> STI Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblRequisitionSearchBody">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer" style="background-color:#0c8599; ">
+                <button type="button" id="SetSTIInfo" class="btn btn-warning" data-dismiss="modal">Ok</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                @*<button type="button" id="SetExperties" class="btn btn-primary" data-save="modal">Ok</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+
+
+
+    $(document).ready(function () {
+        $(window).keydown(function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+
+                var STINo = $("#STINo").val();
+                if (STINo != '') {
+                    $.ajax({
+                        type: "POST",
+                        url: "/STIFGReceive/SearchSTINo",
+                        data: { STINo: STINo },
+                        success: function (msg) {
+                            console.log(msg);
+
+                            $("#tblRequisitionMaster #tblRequisitionSearchBody").empty();
+                            var tr = '';
+                            for (var i = 0; i < msg.length; i++) {
+                                tr = $('<tr/>');
+                                tr.append("<td>" + '<input name="STINo" type="radio" value="' + msg[i].STINo + '"></label>' + "</td>");
+                                tr.append("<td>" + msg[i].STINo + "</td>");
+                                tr.append("<td>" + msg[i].STIDate + "</td>");
+                                $("#tblRequisitionMaster #tblRequisitionSearchBody").append(tr);
+                            }
+                        },
+                        error: function () {
+                            //$('#ExpertiesId').val('');
+                            //$('#ExpertArea').val('');
+                            //$('#ExpertDesc').val('');
+                        }
+                    });
+                }
+
+                // return false;
+            }
+        });
+
+        $('#btnSearchRequisition').on('click', function () {
+            var STINo = $("#STINo").val();
+           
+                $.ajax({
+                    type: "POST",
+                    url: "/STIFGReceive/SearchSTINo",
+                    data: { STINo: STINo },
+                    success: function (msg) {
+                        console.log(msg);
+
+                        $("#tblRequisitionMaster #tblRequisitionSearchBody").empty();
+                        var tr = '';
+                        for (var i = 0; i < msg.length; i++) {
+                            tr = $('<tr/>');
+                            tr.append("<td>" + '<input name="STINo" type="radio" value="' + msg[i].STINo + '"></label>' + "</td>");
+                            tr.append("<td>" + msg[i].STINo + "</td>");
+                            tr.append("<td>" + msg[i].STIDate + "</td>");
+                            $("#tblRequisitionMaster #tblRequisitionSearchBody").append(tr);
+                        }
+                    },
+                    error: function () {
+                        
+                    }
+                });
+            
+        });
+
+        $('#SetSTIInfo').on('click', function () {
+            var STINo = $("input:checked").val();
+            if (STINo != '') {
+                // $.ajax({
+                //     type: "POST",
+                //     url: "/STIFGReceive/SetSTIInformation",
+                //     data: { STINo: STINo },
+                //     success: function (msg) {
+                //         $('#js_requisition_no').val('');
+                       
+                       
+                //         },
+                //     error: function (ex) {
+                //         $("#Stino").val('');
+                //      }
+                   
+                   
+                // });
+                $("#Stino").val('');
+
+                $("#Stino").val(STINo);
+                GetSTIDetails(STINo);
+            }
+        });
+
+    function GetSTIDetails(STINo) {
+        var table = $("#htSTIFGDetailGrid");
+        table.empty();
+        // var STINo = $("#STINo").val();
+           
+        $.ajax({
+            url: '@Url.Action("GetSTIFGDetials", "STIFGReceive")', // Replace with your controller action URL
+            type: 'POST',
+            data: {
+                    StiNo: STINo,
+            },
+            success: function (result) {
+                console.log(result);
+
+                var receiveQuantity = 0;
+
+                $.each(result, function (idx, elem) {
+                    //alert(elem.fgcode);
+                    var stifgrcvno = $("#StifgreceiveNo").val();
+
+
+                    var index = $("#htSTIFGDetailGrid").children("tr").length;
+                    var indexCell = "<td style='display:none'><input name='TblRebStifgreceiveDetail.Index' type='hidden' value='" + index + "' /></td>";
+
+                    var stifgrcvno = "<td style='display:none'> <input type='hidden' class='calStiFgRecvNo form-control readonly' style='text-align:right; width:100%' id='TblRebStifgreceiveDetail_" + index + "_StifgreceiveNo' name='TblRebStifgreceiveDetail[" + index + "].StifgreceiveNo' value='" + stifgrcvno + "'  readonly /> </td>";
+                        var fgCode = "<td> <input type='text' class='calFgCode form-control readonly' style='text-align:left; width:100%' id='TblRebStifgreceiveDetail_" + index + "_Fgcode' name='TblRebStifgreceiveDetail[" + index + "].Fgcode' value='" + elem.Fgcode + "'  readonly /> </td>";
+                        var fgName = "<td> <input type='text' class='calFgName form-control readonly' style='text-align:left; width:100%' id='TblRebStifgreceiveDetail_" + index + "_Fgname'  name='TblRebStifgreceiveDetail[" + index + "].Fgname'  value='" + elem.Fgname + "' readonly /> </td>";
+                        var unit = "<td> <input type='text' class='calUnit form-control readonly' style='text-align:right; width:100%' id='TblRebStifgreceiveDetail_" + index + "_Unit'  name='TblRebStifgreceiveDetail[" + index + "].Unit' value='" + elem.Unit + "' readonly /> </td>";
+                        var stiQuantity = "<td> <input type='text' class='calStiQty form-control readonly' readonly style='text-align:right; width:100%' id='TblRebStifgreceiveDetail_" + index + "_Stiquantity'  name='TblRebStifgreceiveDetail[" + index + "].Stiquantity' value='" + elem.Stiquantity + "' /> </td>";
+
+                        var recieveQty = "<td> <input type='text' class='calRecieveQty form-control' style='text-align:right; width:100%' id='TblRebStifgreceiveDetail_" + index + "_ReceiveQuantity'  name='TblRebStifgreceiveDetail[" + index + "].ReceiveQuantity' value='0' /> </td>";
+                        var actualReceiveQty = "<td> <input type='text' class='calActualRecQty form-control' style='text-align:right; width:100%' id='TblRebStifgreceiveDetail_" + index + "_ActualReceiveQty' name='TblRebStifgreceiveDetail[" + index + "].ActualReceiveQty' value='0' /> </td>";
+
+                        var comments = "<td> <input type='text' class='calComments form-control' style='text-align:left; width:100%' id='TblRebStifgreceiveDetail_" + index + "_Comments' name='TblRebStifgreceiveDetail[" + index + "].Comments'/> </td>";
+
+                    var removeCell = "<td style='text-align: center;'><input id='addRowToTable' type='button' class='btn btn-danger' value='Remove' onclick='removeRowItem(" + index + ");' /></td>";
+
+                    var newRow = "<tr id='TblRebStifgreceiveDetail" + index + "'>" + indexCell + stifgrcvno + fgCode + fgName + unit + stiQuantity + recieveQty + actualReceiveQty + comments + "</tr>";
+
+                    table.append(newRow);
+                });
+            },
+            error: function (error) {
+                // debugger;
+                //alert(3);
+                console.log(error.responseText);
+            }
+        });
+        }
+    });
+
+
+    function removeRowItem(id) {
+
+        var controlToBeRemoved = "#trtbReqBOMDtl" + id;
+        //alert(controlToBeRemoved);
+        $(controlToBeRemoved).remove();
+    }
+    function CheckFloorStock(index) {
+        var floorstock = $("#TblReturnDetails_" + index + "_AvailableFloorStock").val();
+        var returnQty = $("#TblReturnDetails_" + index + "_ReturnQty").val();
+        var issueQty = $("#TblReturnDetails_" + index + "_IssuedQty").val();
+        if (Number(returnQty) > Number(floorstock)) {
+            $("#TblReturnDetails_" + index + "_ReturnQty").val("0");
+            alert("Return Quantity can not exceed FloorStock amount!");
+        }
+        else if (Number(returnQty) > Number(issueQty)) {
+            $("#TblReturnDetails_" + index + "_ReturnQty").val("0");
+            alert("Return Quantity can not exceed Issued amount!");
+        }
+    }
+</script>

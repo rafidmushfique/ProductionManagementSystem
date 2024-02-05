@@ -1,0 +1,150 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>aspnet-LILI_FPMS-E7BDD02C-06D2-4AC5-85A3-A5BEF13FAD67</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Temp_Models\**" />
+    <Content Remove="Temp_Models\**" />
+    <EmbeddedResource Remove="Temp_Models\**" />
+    <None Remove="Temp_Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\dbFormulationProductionSystemContext - Copy.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\RebQC\Create.cshtml" />
+    <Content Remove="Views\RebQC\Index.cshtml" />
+    <Content Remove="Views\RebQC\Update.cshtml" />
+    <Content Remove="Views\RebQC\UpdateBKP.cshtml" />
+    <Content Remove="Views\RebQC\_RequisitionAreaPartial.cshtml" />
+    <Content Remove="Views\RebReturn\Create.cshtml" />
+    <Content Remove="Views\RebReturn\Index.cshtml" />
+    <Content Remove="Views\RebReturn\Update.cshtml" />
+    <Content Remove="Views\RebReturn\_RequisitionAreaPartial.cshtml" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.3" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.4" PrivateAssets="All" />
+    <PackageReference Include="MicrosoftMvcAjax.Mvc5" Version="5.0.0" />
+    <PackageReference Include="NPOI" Version="2.5.4" />
+    <PackageReference Include="Rotativa" Version="1.7.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.3" />
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.2" />
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Line\Create.cshtml" />
+    <None Include="Views\Line\Index.cshtml" />
+    <None Include="Views\Line\Update.cshtml" />
+    <None Include="Views\Machine\Create.cshtml" />
+    <None Include="Views\Machine\Index.cshtml" />
+    <None Include="Views\Machine\Update.cshtml" />
+    <None Include="Views\MaintenanceInformation\Create.cshtml" />
+    <None Include="Views\MaintenanceInformation\Index.cshtml" />
+    <None Include="Views\MaintenanceInformation\Update.cshtml" />
+    <None Include="Views\MonthlyPlanning\Create.cshtml" />
+    <None Include="Views\MonthlyPlanning\Index.cshtml" />
+    <None Include="Views\MonthlyPlanning\Update.cshtml" />
+    <None Include="Views\MonthlyPlanning\_ProductAreaPartial.cshtml" />
+    <None Include="Views\RebQC\Create.cshtml" />
+    <None Include="Views\RebQC\Index.cshtml" />
+    <None Include="Views\RebQC\Update.cshtml" />
+    <None Include="Views\RebQC\UpdateBKP.cshtml" />
+    <None Include="Views\RebQC\_RequisitionAreaPartial.cshtml" />
+    <None Include="Views\QCParameter\Create.cshtml" />
+    <None Include="Views\QCParameter\Index.cshtml" />
+    <None Include="Views\QCParameter\Update.cshtml" />
+    <None Include="Views\QC\Create.cshtml" />
+    <None Include="Views\QC\Index.cshtml" />
+    <None Include="Views\QC\Update.cshtml" />
+    <None Include="Views\QC\_RequisitionAreaPartial.cshtml" />
+    <None Include="Views\RebReturn\Create.cshtml" />
+    <None Include="Views\RebReturn\Index.cshtml" />
+    <None Include="Views\RebReturn\Update.cshtml" />
+    <None Include="Views\RebReturn\_RequisitionAreaPartial.cshtml" />
+    <None Include="Views\RequisitionReturn\Create.cshtml" />
+    <None Include="Views\RequisitionReturn\Index.cshtml" />
+    <None Include="Views\RequisitionReturn\Update.cshtml" />
+    <None Include="Views\RequisitionReturn\_RequisitionAreaPartial.cshtml" />
+    <None Include="wwwroot\fonts\ElegantIcons.eot_#iefix" />
+    <None Include="wwwroot\fonts\ElegantIcons.svg#ElegantIcons" />
+    <None Include="wwwroot\fonts\fontawesome-webfont.eot_#iefix&amp;v=4.1.0" />
+    <None Include="wwwroot\fonts\fontawesome-webfont.eot_v=4.1.0" />
+    <None Include="wwwroot\fonts\fontawesome-webfont.svg_v=4.1.0#fontawesomeregular" />
+    <None Include="wwwroot\fonts\fontawesome-webfont.ttf_v=4.1.0" />
+    <None Include="wwwroot\fonts\fontawesome-webfont.woff_v=4.1.0" />
+    <None Include="wwwroot\fonts\glyphicons-halflings-regular.eot_#iefix" />
+    <None Include="wwwroot\fonts\glyphicons-halflings-regular.svg#glyphicons_halflingsregular" />
+    <None Include="wwwroot\fonts\ionicons.eot_v=1.4.1" />
+    <None Include="wwwroot\fonts\ionicons.eot_v=1.4.1#iefix" />
+    <None Include="wwwroot\fonts\ionicons.svg_v=1.4.1#Ionicons" />
+    <None Include="wwwroot\fonts\ionicons.ttf_v=1.4.1" />
+    <None Include="wwwroot\fonts\ionicons.woff_v=1.4.1" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-theme.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-theme.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\fonts\glyphicons-halflings-regular.svg" />
+    <None Include="wwwroot\lib\bootstrap\dist\fonts\glyphicons-halflings-regular.woff2" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\npm.js" />
+    <None Include="wwwroot\lib\bootstrap\LICENSE" />
+    <None Include="wwwroot\lib\datatables-rowGroup\dataTables.rowsGroup.js" />
+    <None Include="wwwroot\lib\JQuery-unobtrusive-Ajax\jquery-ajax-unobtrusive-master\.vsts-pipelines\builds\ci-public.yml" />
+    <None Include="wwwroot\lib\select2\select2.min.js" />
+    <None Include="wwwroot\lib\table2excel\table2excel.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="ViewAsPdf.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\Report\Create.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Report\ReportAllSubmissionParameter.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Report\Update.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\RebRequisitionApproval\Create.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Views\RebRequisitionApproval\Index.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Views\RebRequisitionApproval\Update.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Views\RebRequisitionApproval\_MaterialSearchPartial.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Views\RebRequisitionApproval\_ProductPartial.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

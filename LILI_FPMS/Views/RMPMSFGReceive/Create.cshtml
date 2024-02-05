@@ -1,0 +1,202 @@
+﻿@model LILI_FPMS.Models.TblRebRmpmsfgreceive
+
+<div id="modal-placeholder"></div>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <strong>Error:</strong> @ViewData.ModelState.Values.SelectMany(v => v.Errors).FirstOrDefault().ErrorMessage
+    </div>
+}
+
+<section class="content-header">
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active"><a href="#"><i class="fa fa-dashboard"></i> RM-PM-SFG Receive List </a></li>
+        <li class="active">Add RM-PM-SFG Receive</li>
+    </ol>
+</section>
+<section class="content container-fluid">
+
+    <div class="card " style="border:1px solid; border-color:cadetblue; padding:10px">
+
+        <form class="form-horizontal" asp-controller="RMPMSFGReceive" method="post" asp-action="CreateReceive">
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">Receive No</label>
+                    <div class="col-sm-3">
+                        <input type="text" asp-for="ReceiveNo" class="form-control" placeholder="RecieveNo" readonly>
+                        <span asp-validation-for="ReceiveNo"></span>
+                    </div>
+
+                    <label asp-for="ReceiveDate" class="col-sm-2 col-sm-offset-1  control-label"> Receive Date</label>
+                    <div class='col-sm-2 input-group date' style="padding-left:15px;">
+                        <input asp-for="ReceiveDate" type='Date' class="form-control" />
+                        <span asp-validation-for="ReceiveDate" class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="BatchNo" class="form-control" placeholder="Batch No" value="NA">
+                 
+                    <label for="inputEmail3" class="col-sm-2 control-label">Requisition Qty</label>
+                    <div class="col-sm-3">
+                        <input type="text" asp-for="RequisitionQty" class="form-control" placeholder="">
+                        <span asp-validation-for="RequisitionQty"></span>
+                    </div>
+
+                    <label for="inputEmail3" class="col-sm-2 col-sm-offset-1 control-label">STI No</label>
+                    <div class="col-sm-2">
+                        @*  <input type="text" asp-for="Stino" class="form-control" placeholder="Stino">
+                        <span asp-validation-for="Stino"></span> *@
+
+                        <select style="width:100%" class="select2 form-control" asp-for="Stino">
+                            @foreach (var item in ViewBag.StiList)
+                            {
+
+                                <option value="@item.value">@item.text</option>
+                            }
+
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                  
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"for="Comments">Comments</label>
+                    <div class="col-sm-9">
+                        <textarea class="form-control" placeholder="Comments" asp-for="Comments" style="height:100px"></textarea>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Material Code</label>
+                            <div class="col-sm-3">
+                                <input type="text" Id="MaterialCodeSearch" class="form-control" placeholder="Material Code" readonly>
+                            </div>
+                            <div class="col-sm-1 controls">
+                                <button type="button" class="btn btn btn-info" data-toggle="ajax-modal" data-target="#add-material-search" data-url="@Url.Action("AddMaterialSearch")">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </div>
+
+                            <label for="inputEmail3" class="col-sm-2 control-label">Material Name</label>
+                            <div class="col-sm-3">
+                                <input type="text" Id="MaterialNameSearch" class="form-control" placeholder="Material Name" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Unit</label>
+                            <div class="col-sm-2">
+                                <input type="text" Id="MaterialUnit" class="form-control" placeholder="Unit">
+                            </div>
+
+                            <label for="inputEmail3" class="col-sm-2 col-sm-offset-2 control-label">Receive Qty</label>
+                            <div class="col-sm-2">
+                                <input type="text" Id="RequiredQty" class="form-control" placeholder="Required Qty" onkeypress='return isNumberKey(event)' value="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label"></label>
+                            <div class="col-sm-10">
+                                <a class="btn btn-primary" onclick="addNewRowToMaterialGrid()">Add Material to grid</a>
+                            </div>
+                        </div>
+                    </div>
+               
+
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div style="border:0px solid #ccc; min-width:30%;  overflow:hidden;">
+                            <table id="htFGTNDetail" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:center; width:5%">RM/PM/SFG Code</th>
+                                        <th style="text-align:center; width:10%">RM/PM/SFG Name</th>
+                                        <th style="text-align:center; width:5%">Unit</th>
+                                        <th style="text-align:center; width:7%">Receive Quantity</th>
+                                        <th style="text-align:center; width:15%">Comments</th>
+                                        <th style="text-align:center; width:5%">Action</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody id="htSTIFGDetailGrid">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+              
+
+            </div>
+
+
+
+            <div class="box-footer">
+
+                <a class="btn btn-mini btn-primary" href='@Url.Content("/RMPMSFGReceive/Index")'>Cancel</a>
+                <button type="submit" class="btn btn-info pull-right">Create</button>
+
+            </div>
+
+        </form>
+    </div>
+
+</section>
+
+<script>
+    $(document).ready(function () { 
+        $(".select2").select2();
+    })
+    function addNewRowToMaterialGrid() {
+
+        var $table = $("#htFGTNDetail");
+
+        var MaterialCode = $("#MaterialCodeSearch").val();
+        var MaterialName = $("#MaterialNameSearch").val();
+        var Unit = $("#MaterialUnit").val();
+        var RequiredQty = $("#RequiredQty").val();
+
+        if (MaterialCode != "") {
+            var rcvNo = $("#ReceiveNo").val();
+            var index = $table.children("tr").length;
+
+            var indexCell = "<td style='display:none'><input name='TblRebRMPMSFGReceiveDetail.Index' type='hidden' value='" + index + "' /></td>";
+            var idCell = "<td style='display:none'> <input id='TblRebRMPMSFGReceiveDetail_" + index + "_Id' name='TblRebRMPMSFGReceiveDetail[" + index + "].Id' type='text' value='" + parseInt(index + 1) + "' /></td>";
+            var RecieveNoCell = "<td style='display:none'> <input id= 'TblRebRMPMSFGReceiveDetail_" + index + "_ReceiveNo' name='TblRebRMPMSFGReceiveDetail[" + index + "].ReceiveNo' value='" + rcvNo + "' /> </td>";
+            var MaterialCodeCell = "<td><input style='width:100%' class='calMatCode form-control nothing' readonly id='TblRebRMPMSFGReceiveDetail" + index + "_Rmpmsfgcode' name='TblRebRMPMSFGReceiveDetail[" + index + "].Rmpmsfgcode' type='text' value='" + MaterialCode + "' /></td>";
+            var MaterialNameCell = "<td><input style='width:100%' class='calMatName form-control nothing' readonly id='TblRebRMPMSFGReceiveDetail" + index + "_Rmpmsfgname' name='TblRebRMPMSFGReceiveDetail[" + index + "].Rmpmsfgname' type='text' value='" + MaterialName + "' /></td>";
+            var MaterialUnitCell = "<td><input style='width:100%' class='calUnit form-control nothing' readonly id='TblRebRMPMSFGReceiveDetail" + index + "_Unit' name='TblRebRMPMSFGReceiveDetail[" + index + "].Unit' type='text' value='" + Unit + "' /></td>";
+            var RequiredQtyCell = "<td><input style='text-align:right;' class='calReqQty form-control' width:100%' id='TblRebRMPMSFGReceiveDetail_" + index + "_ReceiveQty' name='TblRebRMPMSFGReceiveDetail[" + index + "].ReceiveQty' type='text' value='" + RequiredQty + "' /></td>";
+            var CommentsCell = "<td> <input type='text' class='calComments form-control' style=' width:100%' id='TblRebRMPMSFGReceiveDetail_" + index + "_Comments' name='TblRebRMPMSFGReceiveDetail[" + index + "].Comments'/> </td>";
+
+            var removeCell = "<td><input id='addRow' class='btn btn-sm btn-danger' type='button' value='Remove' onclick='removeRow(" + index + ");' /></td>";
+
+            var newRow = "<tr id='trtbRebRMPMSFGReceiveDetail" + index + "'>" + indexCell + MaterialCodeCell + MaterialNameCell + MaterialUnitCell + RequiredQtyCell + CommentsCell + removeCell + "</tr>";
+            $table.append(newRow);
+        }
+        $("#MaterialCodeSearch").val('');
+        $("#MaterialNameSearch").val('');
+        $("#MaterialUnit").val('');
+        $("#StandardRecipeQty").val('');
+        $("#FloorStock").val('');
+        $("#RequiredQty").val('0');
+    }
+    function removeRow(id) {
+        var controlToBeRemoved = "#trtbRebRMPMSFGReceiveDetail" + id;
+        //alert(controlToBeRemoved);
+        $(controlToBeRemoved).remove();
+    }
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode != 46 && (charCode < 48 || charCode > 57)))
+            return false;
+        return true;
+    }
+</script>
