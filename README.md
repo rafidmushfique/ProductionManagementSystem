@@ -1,5 +1,11 @@
 Production Management System
+
+
+
+
 Overview
+
+
 The Production Management System is designed to help businesses manage their production processes efficiently by keeping track of key production elements such as inventory, requisition, production process, and quality control (QC). This system simplifies data entry, allowing users to maintain accurate records and generate detailed reports on production performance.
 
 Features
@@ -14,17 +20,24 @@ Quality Control (QC): Record QC data to ensure product quality at different stag
 Comprehensive Reporting: Generate reports on inventory levels, requisitions, production stages, and quality control to gain actionable insights and improve efficiency.
 
 Technologies Used
+
+
 Backend: ASP.NET Core (C#)
-Frontend: Angular / React / Vue.js (specify your choice)
-Database: SQL Server / MySQL (specify your choice)
+Database: SQL Server 
+
+
+
 Modules
+
+
+
 Inventory Maintenance
 
 Record and update inventory levels.
 Track usage of raw materials and availability of finished goods.
 Requisition
 
-Enter requisition data for resources like materials, machinery, or labor.
+Enter requisition data for resources like materials, machinery, or labour.
 Manage pending and completed requisitions.
 Production Process
 
@@ -38,7 +51,12 @@ Reports
 
 Generate custom reports for inventory, requisition, production, and QC data.
 Export reports in various formats (PDF, Excel).
-Getting Started
+
+
+
+
 Prerequisites
+
+
 .NET SDK
 SQL Server / MySQL
